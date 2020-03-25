@@ -65,6 +65,10 @@ public final class InferenceRulesEngine extends AbstractRulesEngine {
     public void fire(Rules rules, Facts facts) {
         Set<Rule> selectedRules;
         do {
+            if (isHalted()) {
+                LOGGER.debug("Rules engine halted, stopping execution");
+                return;
+            }
             LOGGER.debug("Selecting candidate rules based on the following facts: {}", facts);
             selectedRules = selectCandidates(rules, facts);
             if(!selectedRules.isEmpty()) {
@@ -88,6 +92,11 @@ public final class InferenceRulesEngine extends AbstractRulesEngine {
     @Override
     public Map<Rule, Boolean> check(Rules rules, Facts facts) {
         return delegate.check(rules, facts);
+    }
+
+    @Override
+    public void halt() {
+        this.halted = true;
     }
 
     /**

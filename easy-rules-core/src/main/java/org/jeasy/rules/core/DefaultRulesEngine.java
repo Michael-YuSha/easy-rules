@@ -76,6 +76,10 @@ public final class DefaultRulesEngine extends AbstractRulesEngine {
         log(facts);
         LOGGER.debug("Rules evaluation started");
         for (Rule rule : rules) {
+            if (isHalted()) {
+                LOGGER.debug("Rules engine halted, stopping execution");
+                return;
+            }
             final String name = rule.getName();
             final int priority = rule.getPriority();
             if (priority > parameters.getPriorityThreshold()) {
@@ -145,6 +149,11 @@ public final class DefaultRulesEngine extends AbstractRulesEngine {
         Map<Rule, Boolean> result = doCheck(rules, facts);
         triggerListenersAfterRules(rules, facts);
         return result;
+    }
+
+    @Override
+    public void halt() {
+        this.halted = true;
     }
 
     private Map<Rule, Boolean> doCheck(Rules rules, Facts facts) {

@@ -38,6 +38,7 @@ import java.util.List;
  */
 public abstract class AbstractRulesEngine implements RulesEngine {
 
+    protected boolean halted;
     RulesEngineParameters parameters;
     List<RuleListener> ruleListeners;
     List<RulesEngineListener> rulesEngineListeners;
@@ -50,6 +51,10 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.parameters = parameters;
         this.ruleListeners = new ArrayList<>();
         this.rulesEngineListeners = new ArrayList<>();
+    }
+
+    protected boolean isHalted() {
+        return halted;
     }
 
     @Override
